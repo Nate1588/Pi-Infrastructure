@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pi Infrastructure Recovery Procedures</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; line-height: 1.6; }
+        h1, h2 { color: #d63384; }
+        h3 { color: #0d6efd; }
+        .command { background: #f8f9fa; border-left: 4px solid #0d6efd; padding: 10px; margin: 10px 0; font-family: monospace; }
+        .warning { background: #fff3cd; border-left: 4px solid #ffb900; padding: 10px; margin: 10px 0; }
+        .success { background: #d1edff; border-left: 4px solid #0d6efd; padding: 10px; margin: 10px 0; }
+        ul { margin-left: 20px; }
+    </style>
+</head>
+<body>
+    <h1>🚨 Pi Infrastructure Recovery Procedures</h1>
+    
+    <div class="warning">
+        <strong>When to Use:</strong> After Pi crashes, reboots, or when .home domains redirect to wrong services
+    </div>
+
+    <h2>🔧 Quick Recovery (Most Common)</h2>
+    
+    <h3>1. Automated Recovery Script</h3>
+    <div class="command">
+        ~/pi-infrastructure/scripts/post-crash-recovery.sh
+    </div>
+    <p>This script will automatically restart nginx-proxy and test all key services.</p>
+
+    <h3>2. Manual Recovery Steps</h3>
+    <div class="command">
+        sudo docker restart nginx-proxy<br>
+        sleep 5<br>
+        curl -I http://grafana.home  # Test service routing
+    </div>
+
+    <h2>🧹 Browser Cache Clearing</h2>
+    <p><strong>Problem:</strong> Browser shows wrong service (e.g., grafana.home shows NextCloud instead of Grafana)</p>
+    
+    <h3>Google Chrome</h3>
+    <ul>
+        <li><strong>Method 1:</strong> Open DevTools (F12) → Right-click refresh → "Empty Cache and Hard Reload"</li>
+        <li><strong>Method 2:</strong> Settings → Privacy → Clear browsing data → Check "Cached images and files" → Clear data</li>
+        <li><strong>Method 3:</strong> Use Incognito window to test if cache is the issue</li>
+    </ul>
+
+    <h3>Firefox</h3>
+    <ul>
+        <li><strong>Method 1:</strong> Ctrl+Shift+R (Windows/Linux) or Cmd+Shift+R (Mac) for hard refresh</li>
+        <li><strong>Method 2:</strong> Settings → Privacy & Security → Clear Data → Check "Cached Web Content" → Clear Now</li>
+        <li><strong>Method 3:</strong> Use Private window to test if cache is the issue</li>
+    </ul>
+
+    <h3>Safari</h3>
+    <ul>
+        <li><strong>Method 1:</strong> Develop menu → Empty Caches (enable Develop menu in Preferences)</li>
+        <li><strong>Method 2:</strong> Safari → Preferences → Privacy → Manage Website Data → Remove All</li>
+        <li><strong>Method 3:</strong> Cmd+Shift+R for hard refresh</li>
+    </ul>
+
+    <h2>🔍 Troubleshooting Steps</h2>
+    
+    <h3>1. Check Container Status</h3>
+    <div class="command">
+        sudo docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+    </div>
+    
+    <h3>2. Check nginx-proxy Logs</h3>
+    <div class="command">
+        sudo docker logs nginx-proxy --tail 20
+    </div>
+    <p>Look for "connection refused" errors indicating services aren't reachable.</p>
+    
+    <h3>3. Test DNS Resolution</h3>
+    <div class="command">
+        nslookup grafana.home<br>
+        dig @192.168.68.170 grafana.home
+    </div>
+    
+    <h3>4. Test Direct Service Access</h3>
+    <div class="command">
+        curl -I http://192.168.68.170:3000  # Direct Grafana<br>
+        curl -I http://192.168.68.170:8080  # Direct Pi-hole<br>
+        curl -I http://192.168.68.170:9000  # Direct Portainer
+    </div>
+
+    <h2>🛡️ Why This Happens</h2>
+    <ul>
+        <li><strong>Container IP changes:</strong> After crashes, Docker assigns new internal IPs</li>
+        <li><strong>nginx-proxy caching:</strong> Cached old container locations before they restarted</li>
+        <li><strong>Browser caching:</strong> Cached incorrect redirects during the outage</li>
+        <li><strong>Service startup order:</strong> nginx-proxy started before other services were ready</li>
+    </ul>
+
+    <div class="success">
+        <strong>Prevention:</strong> The nginx configuration now prevents browser caching of error responses, making future recoveries faster.
+    </div>
+
+    <h2>📞 Emergency Contacts</h2>
+    <ul>
+        <li><strong>Pi SSH:</strong> ssh nate@192.168.68.170</li>
+        <li><strong>Pi Direct Web:</strong> http://192.168.68.170:8082 (Homer)</li>
+        <li><strong>Recovery Script Location:</strong> ~/pi-infrastructure/scripts/post-crash-recovery.sh</li>
+    </ul>
+
+    <hr>
+    <p><em>Last updated: August 2025 • Pi Infrastructure Hub</em></p>
+</body>
+</html>

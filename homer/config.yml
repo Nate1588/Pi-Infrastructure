@@ -1,0 +1,145 @@
+---
+title: "Pi Infrastructure Dashboard"
+subtitle: "Network & Home Services"
+logo: "assets/icons/homer.png"
+
+header: true
+footer: '<p>Pi Infrastructure Hub • <span class="has-text-info">33 Services Running</span></p>'
+
+theme: default
+colors:
+  dark:
+    highlight-primary: "#3367d6"
+    highlight-secondary: "#4285f4"
+    highlight-hover: "#5a95f5"
+    background: "#131313"
+    card-background: "#2b2b2b"
+    text: "#eaeaea"
+    text-header: "#ffffff"
+    text-title: "#fafafa"
+    text-subtitle: "#f5f5f5"
+    card-shadow: rgba(0, 0, 0, 0.4)
+    link: "#3273dc"
+    link-hover: "#ffdd57"
+
+# Recovery procedures message
+message:
+  style: "is-warning"
+  title: "🚨 Post-Crash Recovery"
+  icon: "fas fa-wrench"
+  content: "After Pi crashes, run: <code>sudo docker restart nginx-proxy</code><br/>Then clear browser cache if services redirect incorrectly"
+
+services:
+  - name: "🚨 Emergency Procedures"
+    icon: "fas fa-ambulance"
+    items:
+      - name: "Post-Crash Recovery Script"
+        icon: "fas fa-terminal"
+        subtitle: "~/pi-infrastructure/scripts/post-crash-recovery.sh"
+        tag: "recovery"
+        url: "#"
+        
+      - name: "Manual Recovery Steps"
+        icon: "fas fa-list-ol"
+        subtitle: "1. sudo docker restart nginx-proxy  2. Clear browser cache"
+        tag: "manual"
+        url: "#"
+
+  - name: "📊 Monitoring & Management"
+    icon: "fas fa-chart-line"
+    items:
+      - name: "Grafana Dashboard"
+        icon: "fas fa-chart-area"
+        subtitle: "System metrics & performance monitoring"
+        tag: "monitoring"
+        url: "http://grafana.home"
+        
+      - name: "Uptime Kuma"
+        icon: "fas fa-heartbeat"
+        subtitle: "Service availability monitoring"
+        tag: "monitoring"
+        url: "http://uptime.home"
+        
+      - name: "Portainer"
+        icon: "fab fa-docker"
+        subtitle: "Docker container management"
+        tag: "admin"
+        url: "http://portainer.home"
+        
+      - name: "Prometheus"
+        icon: "fas fa-database"
+        subtitle: "Metrics collection engine"
+        tag: "monitoring"
+        url: "http://prometheus.home"
+
+  - name: "🌐 Network & DNS"
+    icon: "fas fa-network-wired"
+    items:
+      - name: "Pi-hole Admin"
+        icon: "fas fa-shield-alt"
+        subtitle: "DNS filtering & ad blocking"
+        tag: "network"
+        url: "http://pihole.home/admin"
+        
+      - name: "Infrastructure Manager"
+        icon: "fas fa-cogs"
+        subtitle: "Custom infrastructure tools"
+        tag: "admin"
+        url: "http://pi:8090"
+
+  - name: "👨‍👩‍👧‍👦 Family Services"
+    icon: "fas fa-home"
+    items:
+      - name: "NextCloud"
+        icon: "fas fa-cloud"
+        subtitle: "Personal cloud storage & sync"
+        tag: "family"
+        url: "http://nextcloud.home"
+        
+      - name: "Immich Photos"
+        icon: "fas fa-images"
+        subtitle: "Photo management & backup"
+        tag: "family"
+        url: "http://photos.home"
+        
+      - name: "Homebox Inventory"
+        icon: "fas fa-box"
+        subtitle: "Household inventory management"
+        tag: "family"
+        url: "http://inventory.home"
+
+  - name: "💾 Storage & NAS"
+    icon: "fas fa-hdd"
+    items:
+      - name: "Amy NAS (Primary)"
+        icon: "fas fa-server"
+        subtitle: "Main storage & applications"
+        tag: "storage"
+        url: "http://amy.home"
+        
+      - name: "Boyle NAS (Media)"
+        icon: "fas fa-film"
+        subtitle: "Movies & media server"
+        tag: "storage"
+        url: "http://boyle.home"
+        
+      - name: "Holt NAS (Backup)"
+        icon: "fas fa-archive"
+        subtitle: "Backup storage system"
+        tag: "storage"
+        url: "http://holt.home"
+
+  - name: "🔧 System Access"
+    icon: "fas fa-tools"
+    items:
+      - name: "Grafana Direct"
+        icon: "fas fa-external-link-alt"
+        subtitle: "Direct port access"
+        tag: "direct"
+        url: "http://192.168.68.170:3000"
+        
+      - name: "Pi-hole Direct"
+        icon: "fas fa-external-link-alt"
+        subtitle: "Direct port access"
+        tag: "direct"
+        url: "http://192.168.68.170:8080/admin"

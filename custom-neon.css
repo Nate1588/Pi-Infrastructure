@@ -1,0 +1,167 @@
+/* ===== CUSTOM NEON THEME (moderate intensity) ===== */
+
+/* base + grid underlay */
+html, body { height: 100%; }
+body {
+  background: #07090c !important;
+  color: #e6fbff !important;
+  font-family: 'Orbitron', sans-serif !important;
+  position: relative;
+  overflow-x: hidden;
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(90deg, rgba(12,187,152,0.06) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(12,187,152,0.06) 1px, transparent 1px);
+  background-size: 28px 28px;
+  z-index: 0;
+  opacity: 0.9;
+}
+
+/* ensure app sits above the grid */
+#app, .status-page { position: relative; z-index: 1; }
+
+/* transparent containers so grid shows */
+.container, .container-fluid, .card, .card-body, .info, .extra-info, .shadow-sm, .content, .status-page, .list, .monitor-list .item, .monitor {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* CSS variables fallback */
+:root {
+  --neon-fallback: #00ffd0;
+  --status-up: #22c55e;
+  --status-down: #ef4444;
+  --status-warn: #f59e0b;
+}
+
+/* pulse animation - reduced intensity */
+@keyframes neonPulse {
+  0%  { box-shadow: 0 0 6px var(--glow-color, var(--neon-fallback)), 0 0 14px var(--glow-color, var(--neon-fallback)); }
+  50% { box-shadow: 0 0 14px var(--glow-color, var(--neon-fallback)), 0 0 26px var(--glow-color, var(--neon-fallback)); }
+  100% { box-shadow: 0 0 6px var(--glow-color, var(--neon-fallback)), 0 0 14px var(--glow-color, var(--neon-fallback)); }
+}
+
+/* MONITOR TILES - use --glow-color set by JS or fallback */
+.list .item, .monitor, .monitor-tile, .grid-stack-item, .grid-stack-item-content {
+  border-radius: 12px !important;
+  border: 1px solid rgba(255,255,255,0.06) !important;
+  padding: 10px !important;
+  transition: transform 220ms ease, box-shadow 220ms ease;
+  --glow-color: var(--neon-fallback);
+  box-shadow: 0 0 10px rgba(0,0,0,0.0);
+}
+
+/* show soft glow using the variable (moderate intensity) */
+.list .item[data-neon="true"], .monitor[data-neon="true"] {
+  border: 1px solid rgba(255,255,255,0.06) !important;
+  box-shadow: 0 0 10px var(--glow-color), 0 0 22px var(--glow-color);
+  animation: neonPulse 3.6s ease-in-out infinite;
+}
+
+/* hover intensify (subtle) */
+.list .item:hover, .monitor:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 18px var(--glow-color), 0 0 40px var(--glow-color);
+}
+
+/* Uptime mini-bars and badges inherit tile --glow-color when inside a neon tile */
+.list .item[data-neon="true"] .beat,
+.list .item[data-neon="true"] .history .bar,
+.monitor[data-neon="true"] .beat {
+  background: var(--glow-color) !important;
+  box-shadow: 0 0 6px var(--glow-color) !important;
+  border-radius: 2px !important;
+}
+
+/* badge style */
+.badge.rounded-pill.bg-primary, .badge.bg-primary {
+  background: rgba(0,0,0,0.45) !important;
+  border: 1px solid rgba(255,255,255,0.06) !important;
+  color: #fff !important;
+  padding: 6px 10px !important;
+  text-shadow: 0 0 6px rgba(0,0,0,0.2);
+}
+.list .item[data-neon="true"] .badge.rounded-pill.bg-primary {
+  border-color: var(--glow-color) !important;
+  color: var(--glow-color) !important;
+  box-shadow: 0 0 10px var(--glow-color) !important;
+}
+
+/* === STATUS BANNER (custom text + status glow) === */
+.overall-status, .status-title, .hero, .status {
+  background: rgba(0,0,0,0.45) !important;
+  border-radius: 12px !important;
+  padding: 14px !important;
+  color: #fff !important;
+  --status-glow: var(--status-up);
+  border: 2px solid rgba(255,255,255,0.04);
+  display: inline-block;
+  animation: neonPulse 4s ease-in-out infinite;
+}
+
+/* stronger border + glow using the status variable (set by JS) */
+.overall-status[data-status-neon="true"], .status-title[data-status-neon="true"], .hero[data-status-neon="true"] {
+  border-color: var(--status-glow) !important;
+  box-shadow: 0 0 12px var(--status-glow), 0 0 30px var(--status-glow);
+}
+
+/* banner custom-text style created by JS */
+.neon-status-text {
+  display: block;
+  margin-top: 8px;
+  font-size: 0.95rem;
+  color: var(--status-glow) !important;
+  text-shadow: 0 0 8px var(--status-glow);
+}
+
+/* === SECTION TITLES — tag-based colours (Core=orange, Infra=purple, Health=magenta) === */
+.monitor-group-title, .group-title, .monitor-list-title, h2, .title {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  display: inline-block;
+  transition: transform 220ms ease, text-shadow 220ms ease;
+}
+
+/* text + soft glow for section titles */
+.monitor-group-title[data-group="Core"],
+.monitor-list-title[data-group="Core"],
+h2[data-group="Core"] {
+  color: #ff8c00 !important;
+  text-shadow: 0 0 10px #ff8c00, 0 0 20px #ff8c00;
+}
+
+/* Infrastructure */
+.monitor-group-title[data-group="Infrastructure"],
+.monitor-list-title[data-group="Infrastructure"],
+h2[data-group="Infrastructure"] {
+  color: #8a2be2 !important;
+  text-shadow: 0 0 10px #8a2be2, 0 0 20px #8a2be2;
+}
+
+/* Health */
+.monitor-group-title[data-group="Health"],
+.monitor-list-title[data-group="Health"],
+h2[data-group="Health"] {
+  color: #ff00ff !important;
+  text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff;
+}
+
+/* hover pulse for titles (subtle) */
+.monitor-group-title:hover, .monitor-list-title:hover, h2:hover {
+  transform: scale(1.03);
+  text-shadow: 0 0 18px currentColor, 0 0 36px currentColor;
+}
+
+/* reduce intensity of history bar shadow for readability */
+.history .bar { box-shadow: none !important; }
+
+/* fallback if JS hasn't run yet: small teal accent */
+.list .item { border-color: rgba(16,185,152,0.08) !important; }

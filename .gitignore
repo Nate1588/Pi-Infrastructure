@@ -1,0 +1,39 @@
+# Database files - don't track these (they're large and change frequently)
+*.db
+*.sqlite
+*.sql
+grafana-active-database.db
+kuma-active-database.db
+uptime-kuma-custom-*.db
+
+# Backup files and archives - don't clutter git with these
+*.backup
+*.bak  
+*.tar.gz
+docker-compose.yml.backup*
+docker-compose.yml.broken*
+docker-compose.yml.corrupted*
+docker-compose.yml.watchtower-broken*
+pi4-*
+grafana-custom-dashboards.tar.gz
+*-active-configs-*.tar.gz
+*-container-active-data-*.tar.gz
+
+# Log files and runtime data
+*.log
+logs/
+data/*/logs/
+data/*/cache/
+data/*/runtime/
+data/*/tmp/
+
+# Environment files with secrets
+.env
+
+# System files  
+.DS_Store
+Thumbs.db
+*.tmp
+*.swp
+*~
+.vscode/

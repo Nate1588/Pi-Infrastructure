@@ -1,0 +1,44 @@
+{
+  "dashboard": {
+    "id": null,
+    "uid": "infra-mgmt",
+    "title": "🔧 Infrastructure Management",
+    "tags": ["management", "infrastructure"],
+    "timezone": "browser",
+    "panels": [
+      {
+        "id": 1,
+        "title": "📊 Service Status",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "up",
+            "legendFormat": "{{job}}",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "mappings": [
+              {"options": {"0": {"text": "DOWN", "color": "red"}}, "type": "value"},
+              {"options": {"1": {"text": "UP", "color": "green"}}, "type": "value"}
+            ]
+          }
+        },
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0}
+      },
+      {
+        "id": 2,
+        "title": "🔗 Quick Links",
+        "type": "text",
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
+        "options": {
+          "content": "## 🚀 Quick Management Links\n\n- [🔧 Infrastructure Manager](http://manage.home:8090)\n- [🛡️ Run Backup](http://manage.home:8090?cmd=backup-run)\n- [📊 System Status](http://manage.home:8090?cmd=system-info)\n- [🔄 Restart Services](http://manage.home:8090?cmd=restart-all)\n- [🧹 Clean Docker](http://manage.home:8090?cmd=clean-docker)\n\n## 📱 Dashboard Links\n\n- [🏠 Homer Dashboard](http://homer.home:8082)\n- [⏰ Uptime Kuma](http://uptime.home:3001)\n- [🐳 Portainer](http://portainer.home:9000)\n- [🕳️ Pi-hole Admin](http://pihole.home:8080/admin)",
+          "mode": "markdown"
+        }
+      }
+    ],
+    "time": {"from": "now-5m", "to": "now"},
+    "refresh": "30s"
+  }
+}

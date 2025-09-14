@@ -1,0 +1,45 @@
+{
+  "dashboard": {
+    "id": null,
+    "title": "Alerting & Monitoring Overview",
+    "tags": ["alerts", "monitoring"],
+    "timezone": "browser",
+    "refresh": "30s",
+    "time": {"from": "now-6h", "to": "now"},
+    "panels": [
+      {
+        "id": 1,
+        "title": "Active Alerts",
+        "type": "table",
+        "targets": [{"expr": "ALERTS{alertstate=\"firing\"}", "refId": "A"}],
+        "gridPos": {"h": 8, "w": 24, "x": 0, "y": 0}
+      },
+      {
+        "id": 2,
+        "title": "Alert History",
+        "type": "timeseries",
+        "targets": [{"expr": "increase(prometheus_notifications_total[1h])", "legendFormat": "Notifications", "refId": "A"}],
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8}
+      },
+      {
+        "id": 3,
+        "title": "Service Uptime %",
+        "type": "stat",
+        "targets": [{"expr": "avg_over_time(up[24h]) * 100", "legendFormat": "{{instance}}", "refId": "A"}],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "thresholds": {
+              "steps": [
+                {"color": "red", "value": 0},
+                {"color": "yellow", "value": 95},
+                {"color": "green", "value": 99}
+              ]
+            }
+          }
+        },
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8}
+      }
+    ]
+  }
+}

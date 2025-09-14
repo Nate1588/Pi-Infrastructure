@@ -1,0 +1,29 @@
+{
+    "name": "Neon Grid",
+    "isDark": true,
+    "primaryColor": "#00f6ff",
+    "accentColor": "#00ff8c",
+    "colors": {
+        "--body-bg": "#0a0f1c",
+        "--card-bg": "#10141f",
+        "--header-bg": "#10141f",
+        "--font-color": "#d7f7ff",
+        "--primary-color": "#00f6ff",
+        "--primary-hover": "#00d6ff",
+        "--accent-color": "#00ff8c",
+        "--ok-color": "#00ff88",
+        "--warn-color": "#ff8a00",
+        "--danger-color": "#ff0033",
+        "--link-color": "#00f6ff",
+        "--border-color": "#1b1b1b"
+    },
+    "charts": {
+        "okColor": "#00ff8c",
+        "warnColor": "#ff8a00",
+        "downColor": "#ff0033",
+        "maintenanceColor": "#ff33cc",
+        "unknownColor": "#888888"
+    },
+    "font": "'Orbitron', sans-serif",
+    "customCSS": "@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');\n\nbody {\n  background: #0a0f1c;\n  color: #d7f7ff;\n  font-family: 'Orbitron', sans-serif;\n}\n\nbody::before {\n  content: \"\";\n  position: fixed;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 100%;\n  background-image: linear-gradient(#00ff99 1px, transparent 1px),\n                    linear-gradient(90deg, #00ff99 1px, transparent 1px);\n  background-size: 50px 50px;\n  opacity: 0.05;\n  z-index: -1;\n}\n\nh2 {\n  font-size: 1.4rem !important;\n  text-transform: uppercase;\n  color: #00f6ff;\n  text-shadow: 0 0 8px #00f6ff, 0 0 16px #00f6ff, 0 0 24px #00f6ff;\n  margin-bottom: 10px;\n  transition: text-shadow 0.3s ease-in-out;\n}\n\nh2:hover {\n  animation: glowPulse 1.5s infinite alternate;\n}\n\n@keyframes glowPulse {\n  0% { text-shadow: 0 0 8px #00f6ff, 0 0 16px #00f6ff, 0 0 24px #00f6ff; }\n  100% { text-shadow: 0 0 16px #00f6ff, 0 0 32px #00f6ff, 0 0 48px #00f6ff; }\n}\n\n.card {\n  background: #10141f;\n  border: 2px solid #1b1b1b;\n  border-radius: 14px;\n  margin-bottom: 1rem;\n  box-shadow: 0 0 20px rgba(0, 255, 111, 0.15);\n  transition: box-shadow 0.3s ease-in-out;\n}\n.card:hover {\n  box-shadow: 0 0 20px rgba(0, 255, 111, 0.5), 0 0 40px rgba(0, 255, 111, 0.3);\n}\n\n.monitor-title {\n  color: #d2eaff;\n  font-size: 1.1rem;\n  font-weight: bold;\n}\n\n.tag {\n  font-weight: bold;\n  padding: 3px 8px;\n  border-radius: 8px;\n  color: #fff;\n  text-shadow: 0 0 6px rgba(0,0,0,0.5);\n  display: inline-block;\n  transition: transform 0.3s, box-shadow 0.3s;\n}\n.tag:hover {\n  transform: scale(1.1);\n  animation: tagPulse 1.2s infinite alternate;\n}\n\n@keyframes tagPulse {\n  0% { box-shadow: 0 0 8px currentColor, 0 0 16px currentColor; }\n  100% { box-shadow: 0 0 16px currentColor, 0 0 32px currentColor; }\n}\n\n.tag[data-tag=\"Core\"] { background-color: #ff8a00; color: #fff; }\n.tag[data-tag=\"Pi\"] { background-color: #ff0033; }\n.tag[data-tag=\"Services\"] { background-color: #00ff88; }\n.tag[data-tag=\"Home\"] { background-color: #007bff; }\n.tag[data-tag=\"Infrastructure\"] { background-color: #666; }\n.tag[data-tag=\"Health\"] { background-color: #ff33cc; }\n.tag[data-tag=\"System\"] { background-color: #aa66ff; }\n\n.badge {\n  background: #000;\n  border: 1px solid #00ff88;\n  color: #00ff88;\n  font-weight: bold;\n  padding: 4px 8px;\n  border-radius: 6px;\n  box-shadow: 0 0 10px #00ff88;\n  transition: transform 0.3s, box-shadow 0.3s;\n}\n.badge:hover {\n  transform: scale(1.1);\n  box-shadow: 0 0 16px #00ff88, 0 0 32px #00ff88;\n}\n\n.progress-bar {\n  background-color: #00ff8c !important;\n  box-shadow: 0 0 8px #00ff8c, 0 0 16px #00ff8c;\n  border-radius: 6px;\n}\n\n.status-ok {\n  color: #00ff88;\n  font-weight: bold;\n  text-shadow: 0 0 10px #00ff88, 0 0 20px #00ff88;\n}\n"
+}

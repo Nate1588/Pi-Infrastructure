@@ -1,0 +1,36 @@
+{
+  "dashboard": {
+    "id": null,
+    "title": "Pi-hole Monitoring Dashboard",
+    "tags": ["pihole", "dns"],
+    "timezone": "browser",
+    "panels": [
+      {
+        "id": 1,
+        "title": "Queries Over Time",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "pihole_queries_today",
+            "legendFormat": "Total Queries Today"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0}
+      },
+      {
+        "id": 2,
+        "title": "Blocked Queries",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "pihole_blocked_queries_today",
+            "legendFormat": "Blocked Today"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0}
+      }
+    ],
+    "time": {"from": "now-24h", "to": "now"},
+    "refresh": "30s"
+  }
+}

@@ -1,0 +1,51 @@
+title: "Pi Infrastructure Dashboard"
+subtitle: "Network Control Center"
+logo: "logo.png"
+icon: "fas fa-skull-crossbones"
+
+header: true
+footer: '<p>Infrastructure Dashboard</p>'
+
+columns: "3"
+
+services:
+  - name: "Core Services"
+    icon: "fas fa-cloud"
+    items:
+      - name: "Pi-hole"
+        logo: "assets/tools/pihole.png"
+        subtitle: "Network DNS"
+        tag: "dns"
+        url: "http://192.168.68.170:8080/admin"
+        target: "_blank"
+      
+      - name: "Grafana"
+        logo: "assets/tools/grafana.png"
+        subtitle: "Monitoring"
+        tag: "monitoring"
+        url: "http://192.168.68.170:3000"
+        target: "_blank"
+      
+      - name: "Prometheus"
+        logo: "assets/tools/prometheus.png"
+        subtitle: "Metrics"
+        tag: "monitoring"
+        url: "http://192.168.68.170:9090"
+        target: "_blank"
+
+  - name: "Management"
+    icon: "fas fa-tools"
+    items:
+      - name: "Portainer"
+        logo: "assets/tools/portainer.png"
+        subtitle: "Docker Management"
+        tag: "docker"
+        url: "http://192.168.68.170:9000"
+        target: "_blank"
+      
+      - name: "Uptime Kuma"
+        logo: "assets/tools/uptime-kuma.png"
+        subtitle: "Service Monitoring"
+        tag: "monitoring"
+        url: "http://192.168.68.170:3001"
+        target: "_blank"

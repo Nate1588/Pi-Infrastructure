@@ -1,0 +1,54 @@
+{
+  "dashboard": {
+    "id": null,
+    "title": "Performance Metrics Deep Dive",
+    "tags": ["performance", "detailed"],
+    "timezone": "browser", 
+    "refresh": "10s",
+    "time": {"from": "now-30m", "to": "now"},
+    "panels": [
+      {
+        "id": 1,
+        "title": "CPU Usage by Core",
+        "type": "timeseries",
+        "targets": [{"expr": "100 - (rate(node_cpu_seconds_total{mode=\"idle\"}[5m]) * 100)", "legendFormat": "Core {{cpu}}", "refId": "A"}],
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0}
+      },
+      {
+        "id": 2,
+        "title": "Memory Details",
+        "type": "timeseries",
+        "targets": [
+          {"expr": "node_memory_MemTotal_bytes", "legendFormat": "Total", "refId": "A"},
+          {"expr": "node_memory_MemAvailable_bytes", "legendFormat": "Available", "refId": "B"},
+          {"expr": "node_memory_Cached_bytes", "legendFormat": "Cached", "refId": "C"},
+          {"expr": "node_memory_Buffers_bytes", "legendFormat": "Buffers", "refId": "D"}
+        ],
+        "fieldConfig": {"defaults": {"unit": "bytes"}},
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0}
+      },
+      {
+        "id": 3,
+        "title": "Network Traffic",
+        "type": "timeseries",
+        "targets": [
+          {"expr": "rate(node_network_receive_bytes_total[5m])", "legendFormat": "RX {{device}}", "refId": "A"},
+          {"expr": "rate(node_network_transmit_bytes_total[5m])", "legendFormat": "TX {{device}}", "refId": "B"}
+        ],
+        "fieldConfig": {"defaults": {"unit": "Bps"}},
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8}
+      },
+      {
+        "id": 4,
+        "title": "Disk I/O",
+        "type": "timeseries",
+        "targets": [
+          {"expr": "rate(node_disk_read_bytes_total[5m])", "legendFormat": "Read {{device}}", "refId": "A"},
+          {"expr": "rate(node_disk_written_bytes_total[5m])", "legendFormat": "Write {{device}}", "refId": "B"}
+        ],
+        "fieldConfig": {"defaults": {"unit": "Bps"}},
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8}
+      }
+    ]
+  }
+}

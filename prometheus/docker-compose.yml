@@ -1,0 +1,239 @@
+version: '3.8'
+
+networks:
+  gateway_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+volumes:
+  grafana_data:
+  portainer_data:
+  prometheus_data:
+  uptime_kuma_data:
+
+services:
+  # Core DNS Services
+  pihole:
+    image: pihole/pihole:latest
+    container_name: pihole
+    platform: linux/arm64
+    restart: unless-stopped
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "8080:80/tcp"
+    environment:
+      TZ: Australia/Perth
+      WEBPASSWORD: admin123
+      PIHOLE_DNS_: 1.1.1.1;1.0.0.1
+      REV_SERVER: "true"
+      REV_SERVER_DOMAIN: local
+      REV_SERVER_TARGET: 192.168.68.1
+      REV_SERVER_CIDR: 192.168.68.0/24
+      FTLCONF_LOCAL_IPV4: 192.168.68.170
+      DNSMASQ_LISTENING: all
+    volumes:
+      - /home/nate/pi-infrastructure/config/data/etc-pihole:/etc/pihole
+      - /home/nate/pi-infrastructure/config/data/etc-dnsmasq.d:/etc/dnsmasq.d
+    networks:
+      - gateway_net
+
+  unbound:
+    image: klutchell/unbound:latest
+    container_name: unbound
+    restart: unless-stopped
+    ports:
+      - "5353:53/tcp"
+      - "5353:53/udp"
+    volumes:
+      - /home/nate/pi-infrastructure/config/data/unbound:/opt/unbound/etc/unbound
+    networks:
+      - gateway_net
+
+  # Reverse Proxy
+  nginx-proxy:
+    image: nginx:alpine
+    container_name: nginx-proxy
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:80:80"
+      - "192.168.68.170:80:80"
+      - "127.0.0.1:443:443"
+      - "192.168.68.170:443:443"
+    volumes:
+      - /home/nate/pi-infrastructure/config/data/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - /home/nate/pi-infrastructure/config/data/nginx/conf.d:/etc/nginx/conf.d:ro
+      - /home/nate/pi-infrastructure/config/data/nginx/ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - pihole
+    networks:
+      - gateway_net
+
+  # External Access
+  # Monitoring Stack
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    volumes:
+      - prometheus_data:/prometheus
+      - /home/nate/pi-infrastructure/config/data/prometheus:/etc/prometheus
+    networks:
+      - gateway_net
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: admin123
+      GF_INSTALL_PLUGINS: grafana-piechart-panel
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - /home/nate/pi-infrastructure/config/data/grafana/provisioning:/etc/grafana/provisioning
+    networks:
+      - gateway_net
+
+  alertmanager:
+    image: prom/alertmanager:latest
+    container_name: alertmanager
+    restart: unless-stopped
+    ports:
+      - "9093:9093"
+    volumes:
+      - /home/nate/pi-infrastructure/config/data/alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml
+    networks:
+      - gateway_net
+
+  # Exporters
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: node-exporter
+    restart: unless-stopped
+    ports:
+      - "9100:9100"
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.rootfs=/rootfs'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    networks:
+      - gateway_net
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    container_name: cadvisor
+    restart: unless-stopped
+    privileged: true
+    ports:
+      - "8081:8080"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker:/var/lib/docker:ro
+      - /dev/disk:/dev/disk:ro
+    networks:
+      - gateway_net
+
+  pihole-exporter:
+    image: ekofr/pihole-exporter:latest
+    container_name: pihole-exporter
+    restart: unless-stopped
+    ports:
+      - "9617:9617"
+    environment:
+      PIHOLE_HOSTNAME: pihole
+      PIHOLE_PASSWORD: admin123
+    depends_on:
+      - pihole
+    networks:
+      - gateway_net
+
+  blackbox-exporter:
+    image: prom/blackbox-exporter:latest
+    container_name: blackbox-exporter
+    restart: unless-stopped
+    ports:
+      - "9115:9115"
+    volumes:
+      - /home/nate/pi-infrastructure/config/data/blackbox/blackbox.yml:/etc/blackbox_exporter/config.yml
+    networks:
+      - gateway_net
+
+  # Management Services
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    restart: unless-stopped
+    ports:
+      - "9000:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    networks:
+      - gateway_net
+
+  uptime-kuma:
+    image: louislam/uptime-kuma:latest
+    container_name: uptime-kuma
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    volumes:
+      - uptime_kuma_data:/app/data
+    networks:
+      - gateway_net
+
+  homer:
+    image: b4bz/homer:latest
+    container_name: homer
+    restart: unless-stopped
+    platform: linux/arm64
+    ports:
+      - "8082:8080"
+    volumes:
+      - /home/nate/pi-infrastructure/config/data/homer:/www/assets
+    networks:
+      - gateway_net
+
+  infrastructure-manager:
+    image: nginx:alpine
+    container_name: infrastructure-manager
+    restart: unless-stopped
+    ports:
+      - "8090:80"
+    volumes:
+      - /home/nate/pi-infrastructure/config/data/infrastructure-manager:/usr/share/nginx/html
+    networks:
+      - gateway_net
+
+  # Maintenance
+  watchtower:
+    image: containrrr/watchtower:latest
+    container_name: watchtower
+    restart: unless-stopped
+    environment:
+      WATCHTOWER_CLEANUP: "true"
+      WATCHTOWER_SCHEDULE: "0 0 2 * * MON"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - gateway_net

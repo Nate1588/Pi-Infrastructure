@@ -1,0 +1,11 @@
+/* TEST CUSTOM.CSS */
+body {
+  background: hotpink !important;
+  font-size: 24px !important;
+  color: lime !important;
+}
+
+h1, h2, h3 {
+  border: 4px dashed red !important;
+  text-shadow: 2px 2px 10px yellow !important;
+}
